@@ -1,0 +1,205 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "width": 600,
+    "height": 380,
+
+    "title": {
+      "text": "The Indigenous achievement gap persists across every jurisdiction",
+      "subtitle": "Year 7 Reading — difference in average NAPLAN score, 2025",
+      "anchor": "start",
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "subtitlePadding": 8
+    },
+
+    "data": {
+      "url": "data/naplan_equity.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "calendar_year": "number",
+          "year_level": "number",
+          "average_score": "number"
+        }
+      }
+    },
+
+    "transform": [
+      {
+        "filter": "datum.calendar_year == 2025 && datum.year_level == 7 && datum.domain == 'Reading' && datum.student_attribute == 'Indigeneity' && (datum.subgroup == 'Indigenous' || datum.subgroup == 'Non-Indigenous') && datum.state_territory != 'Australia'"
+      },
+
+      {
+        "pivot": "subgroup",
+        "value": "average_score",
+        "groupby": [
+          "state_territory"
+        ]
+      },
+
+      {
+        "calculate": "datum['Non-Indigenous'] - datum['Indigenous']",
+        "as": "gap"
+      },
+
+      {
+        "lookup": "state_territory",
+        "from": {
+          "data": {
+            "values": [
+              {
+                "state_territory": "Western Australia",
+                "abbr": "WA",
+                "col": 1,
+                "row": 2
+              },
+              {
+                "state_territory": "Northern Territory",
+                "abbr": "NT",
+                "col": 2,
+                "row": 1
+              },
+              {
+                "state_territory": "South Australia",
+                "abbr": "SA",
+                "col": 2,
+                "row": 2
+              },
+              {
+                "state_territory": "Queensland",
+                "abbr": "QLD",
+                "col": 3,
+                "row": 1
+              },
+              {
+                "state_territory": "New South Wales",
+                "abbr": "NSW",
+                "col": 3,
+                "row": 2
+              },
+              {
+                "state_territory": "Victoria",
+                "abbr": "VIC",
+                "col": 3,
+                "row": 3
+              },
+              {
+                "state_territory": "Tasmania",
+                "abbr": "TAS",
+                "col": 3,
+                "row": 4
+              },
+              {
+                "state_territory": "Australian Capital Territory",
+                "abbr": "ACT",
+                "col": 4,
+                "row": 2
+              }
+            ]
+          },
+          "key": "state_territory",
+          "fields": [
+            "abbr",
+            "col",
+            "row"
+          ]
+        }
+      }
+    ],
+
+    "layer": [
+      {
+        "mark": {
+          "type": "rect",
+          "cornerRadius": 8,
+          "stroke": "white",
+          "strokeWidth": 3
+        },
+
+        "encoding": {
+          "x": {
+            "field": "col",
+            "type": "ordinal",
+            "axis": null
+          },
+
+          "y": {
+            "field": "row",
+            "type": "ordinal",
+            "axis": null
+          },
+
+          "color": {
+            "field": "gap",
+            "type": "quantitative",
+            "title": "Score gap",
+            "scale": {
+              "scheme": "orangered"
+            }
+          },
+
+          "tooltip": [
+            {
+              "field": "state_territory",
+              "type": "nominal",
+              "title": "State / Territory"
+            },
+            {
+              "field": "Indigenous",
+              "type": "quantitative",
+              "title": "Indigenous score",
+              "format": ".1f"
+            },
+            {
+              "field": "Non-Indigenous",
+              "type": "quantitative",
+              "title": "Non-Indigenous score",
+              "format": ".1f"
+            },
+            {
+              "field": "gap",
+              "type": "quantitative",
+              "title": "Score gap",
+              "format": ".1f"
+            }
+          ]
+        }
+      },
+
+      {
+        "mark": {
+          "type": "text",
+          "fontSize": 18,
+          "fontWeight": "bold",
+          "color": "white"
+        },
+
+        "encoding": {
+          "x": {
+            "field": "col",
+            "type": "ordinal"
+          },
+
+          "y": {
+            "field": "row",
+            "type": "ordinal"
+          },
+
+          "text": {
+            "field": "abbr"
+          }
+        }
+      }
+    ],
+
+    "config": {
+      "view": {
+        "stroke": null
+      },
+
+      "legend": {
+        "orient": "bottom"
+      }
+    }
+  }

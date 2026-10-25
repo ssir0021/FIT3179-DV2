@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Australia's Learning Divide</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+
+<body>
+
+  <header class="hero">
+    <div class="page-container">
+
+      <p class="eyebrow">FIT3179 · Data Visualisation 2</p>
+
+      <h1>Australia's Learning Divide</h1>
+
+      <p class="hero-question">
+        Where are Australia's literacy and numeracy gaps,
+        and which students are being left behind?
+      </p>
+
+      <p class="hero-intro">
+        Literacy and numeracy shape students' educational opportunities,
+        yet achievement is not distributed equally across Australia.
+        This visualisation explores recent NAPLAN results across school
+        year levels, states and territories, gender and remoteness,
+        before placing Australia's performance in an international
+        context using OECD PISA data.
+      </p>
+
+      <p class="data-note">
+        <strong>Reading the data:</strong>
+        NAPLAN proficiency reporting changed in 2023.
+        Trend comparisons therefore focus on results from 2023 onwards.
+      </p>
+
+    </div>
+  </header>
+
+
+  <main class="page-container">
+
+    <!-- NATIONAL PICTURE -->
+
+    <section id="national-picture" class="story-section">
+
+      <div class="section-intro">
+        <p class="section-number">01</p>
+        <p class="section-kicker">National performance</p>
+
+        <h2>The national picture</h2>
+
+        <p>
+          Australia-wide results provide the starting point.
+          Reading and Numeracy outcomes differ across year levels,
+          while the proportion of students reaching stronger
+          proficiency levels also changes over time.
+        </p>
+      </div>
+
+
+      <div class="takeaway">
+        <span class="takeaway-label">Key finding</span>
+
+        <p>
+          Performance is not uniform across year levels.
+          Reading and Numeracy follow different patterns as students
+          progress through school.
+        </p>
+      </div>
+
+
+      <div class="chart-card chart-full">
+        <div class="chart-tag">National overview</div>
+
+        <div id="heatmap"></div>
+
+        <p class="chart-note">
+          <strong>What to notice:</strong>
+          Year 5 Numeracy strengthens by 2026, while Year 9 Reading
+          finishes noticeably lower.
+        </p>
+      </div>
+
+
+      <div class="chart-grid two-column">
+
+        <div class="chart-card">
+          <div class="chart-tag">Proficiency</div>
+          <div id="proficiency_stack"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-tag">Trend</div>
+          <div id="year9_trend"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- GEOGRAPHY -->
+
+    <section id="geography" class="story-section">
+
+      <div class="section-intro">
+        <p class="section-number">02</p>
+        <p class="section-kicker">Place and performance</p>
+
+        <h2>Geography matters</h2>
+
+        <p>
+          National averages can hide substantial differences between
+          Australia's states and territories. Mapping the results reveals
+          where achievement is strongest, where student populations differ,
+          and where educational gaps are most visible.
+        </p>
+      </div>
+
+
+      <div class="takeaway">
+        <span class="takeaway-label">What the maps show</span>
+
+        <p>
+          The same national education system produces noticeably different
+          outcomes across jurisdictions, with geographic patterns appearing
+          repeatedly across several measures.
+        </p>
+      </div>
+
+
+      <div class="chart-grid two-column">
+
+        <div class="chart-card">
+          <div class="chart-tag">Achievement</div>
+
+          <div id="choropleth_map"></div>
+
+          <p class="chart-note">
+            <strong>What to notice:</strong>
+            Victoria leads Year 3 Reading, while the Northern Territory
+            records the weakest result.
+          </p>
+        </div>
+
+
+        <div class="chart-card">
+          <div class="chart-tag">Achievement + cohort size</div>
+          <div id="symbol_map"></div>
+        </div>
+
+      </div>
+
+
+      <div class="chart-grid two-column">
+
+        <div class="chart-card">
+          <div class="chart-tag">Equity</div>
+          <div id="tile_map"></div>
+        </div>
+
+
+        <div class="chart-card">
+          <div class="chart-tag">Proficiency</div>
+          <div id="dot_map"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- STUDENT GAPS -->
+
+    <section id="student-gaps" class="story-section">
+
+      <div class="section-intro">
+        <p class="section-number">03</p>
+        <p class="section-kicker">Equity and opportunity</p>
+
+        <h2>Which students face the largest gaps?</h2>
+
+        <p>
+          Geography is only part of the story. Achievement also differs
+          across student groups. Gender patterns vary between Reading
+          and Numeracy, while remoteness is associated with particularly
+          large differences in average NAPLAN performance.
+        </p>
+      </div>
+
+
+      <div class="takeaway takeaway-warm">
+        <span class="takeaway-label">Equity matters</span>
+
+        <p>
+          The strongest contrasts become visible when location and
+          student background are considered alongside the national average.
+        </p>
+      </div>
+
+
+      <div class="chart-grid two-column">
+
+        <div class="chart-card">
+          <div class="chart-tag warm-tag">Gender</div>
+
+          <div id="gender_slope"></div>
+
+          <p class="chart-note chart-note-warm">
+            <strong>What to notice:</strong>
+            The gender pattern reverses: females lead in Reading,
+            while males lead in Numeracy.
+          </p>
+        </div>
+
+
+        <div class="chart-card">
+          <div class="chart-tag warm-tag">Remoteness</div>
+
+          <div id="remoteness_dumbbell"></div>
+
+          <p class="chart-note chart-note-warm">
+            <strong>What to notice:</strong>
+            Very remote students trail major-city students by about
+            119 points in Reading and 121 points in Numeracy.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="chart-card chart-full">
+        <div class="chart-tag warm-tag">Jurisdiction spread</div>
+        <div id="cohort_gain"></div>
+      </div>
+
+    </section>
+
+
+
+    <!-- RANKINGS -->
+
+    <section id="rankings" class="story-section">
+
+      <div class="section-intro">
+        <p class="section-number">04</p>
+        <p class="section-kicker">Change over time</p>
+
+        <h2>State rankings remain relatively stable</h2>
+
+        <p>
+          Tracking Year 3 Reading performance over time shows that
+          much of the jurisdictional ordering remained stable between
+          2023 and 2025, although some states changed position.
+        </p>
+      </div>
+
+
+      <div class="takeaway">
+        <span class="takeaway-label">A stable hierarchy</span>
+
+        <p>
+          Victoria remained first across the period, while movement
+          was more visible among the middle-ranked jurisdictions.
+        </p>
+      </div>
+
+
+      <div class="chart-card chart-full">
+        <div class="chart-tag">Rankings</div>
+
+        <div id="reading_bump"></div>
+
+        <p class="chart-note">
+          <strong>What to notice:</strong>
+          Victoria remains first throughout, while Queensland moves
+          ahead of Western Australia in 2025.
+        </p>
+      </div>
+
+    </section>
+
+
+
+    <!-- INTERNATIONAL -->
+
+    <section id="international" class="story-section">
+
+      <div class="section-intro">
+        <p class="section-number">05</p>
+        <p class="section-kicker">Beyond Australia</p>
+
+        <h2>Australia in international context</h2>
+
+        <p>
+          NAPLAN reveals differences within Australia, while PISA provides
+          an international benchmark. Australia's mathematics performance
+          sits above the OECD average, but there remains a substantial
+          spread between lower- and higher-performing students.
+        </p>
+      </div>
+
+
+      <div class="takeaway">
+        <span class="takeaway-label">International perspective</span>
+
+        <p>
+          Australia's average mathematics performance is above the OECD
+          average, but the wide performance range shows why a national mean
+          cannot describe every student's experience.
+        </p>
+      </div>
+
+
+      <div class="chart-card chart-full">
+        <div class="chart-tag">PISA 2022</div>
+
+        <div id="pisa_range"></div>
+
+        <p class="chart-note">
+          <strong>What to notice:</strong>
+          Australia's mean of about 487 exceeds the OECD average of
+          about 472, but the distance between lower- and higher-performing
+          students remains wide.
+        </p>
+      </div>
+
+    </section>
+
+
+
+    <!-- CONCLUSION -->
+
+    <section id="conclusion" class="story-section conclusion-section">
+
+      <div class="section-intro">
+        <p class="section-number">06</p>
+        <p class="section-kicker conclusion-kicker">The takeaway</p>
+
+        <h2>
+          The national average tells only part of the story
+        </h2>
+
+        <p>
+          Australia's literacy and numeracy results reveal substantial
+          differences across geography, year level and student background.
+          Looking only at a national score can obscure these gaps.
+        </p>
+
+        <p>
+          Understanding educational performance therefore requires attention
+          not only to overall achievement, but also to how opportunity and
+          outcomes are distributed across different groups and locations.
+        </p>
+      </div>
+
+    </section>
+
+
+
+    <!-- SOURCES -->
+
+    <section id="sources" class="sources-section">
+
+      <p class="sources-kicker">Methodology</p>
+      <h2>Data sources and notes</h2>
+
+
+      <div class="source-grid">
+
+        <div class="source-block">
+          <h3>NAPLAN</h3>
+
+          <p>
+            Australian Curriculum, Assessment and Reporting Authority
+            (ACARA), NAPLAN National Results Dataset, 2023–2026.
+          </p>
+
+          <p>
+            <a
+              href="https://www.acara.edu.au/reporting/national-report-on-schooling-in-australia/naplan-national-results"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View ACARA source
+            </a>
+          </p>
+        </div>
+
+
+        <div class="source-block">
+          <h3>PISA</h3>
+
+          <p>
+            OECD Programme for International Student Assessment
+            (PISA) 2022.
+          </p>
+
+          <p>
+            <a
+              href="https://www.oecd.org/en/data/datasets/pisa-2022-database.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View OECD source
+            </a>
+          </p>
+        </div>
+
+
+        <div class="source-block">
+          <h3>Geography</h3>
+
+          <p>
+            Australian Bureau of Statistics, Australian Statistical
+            Geography Standard 2026 State and Territory boundaries.
+          </p>
+
+          <p>
+            <a
+              href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-4-july-2026-june-2031/access-and-downloads/digital-boundary-files"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View ABS boundaries
+            </a>
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="method-notes">
+
+        <p>
+          <strong>NAPLAN comparability:</strong>
+          proficiency reporting changed in 2023, so trend comparisons
+          focus on 2023 onwards.
+        </p>
+
+        <p>
+          <strong>2026 Tasmania:</strong>
+          achievement results are suppressed in relevant ACARA records.
+          Visualisations requiring complete jurisdiction comparisons
+          therefore use 2025 where appropriate.
+        </p>
+
+        <p>
+          <strong>PISA caution:</strong>
+          OECD identifies Australia with an asterisk in PISA 2022,
+          indicating that caution is required when interpreting estimates
+          because one or more sampling standards were not met.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer class="site-footer">
+
+    <div class="page-container footer-grid">
+
+      <div>
+        <p class="footer-title">Australia's Learning Divide</p>
+        <p>Visualisation by Shehara Siriwardena</p>
+        <p>FIT3179 Data Visualisation 2 · October 2026</p>
+      </div>
+
+
+      <div class="footer-ai">
+        <p>
+          <strong>AI acknowledgement:</strong>
+          AI tools were utilised to support geographic data conversion, troubleshoot code, and refine the implementation using HTML, CSS, JavaScript, Vega and Vega-Lite.
+          The final work was carefully reviewed and validated by the author.
+        </p>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="js/vega_lite_vis.js"></script>
+
+</body>
+</html>

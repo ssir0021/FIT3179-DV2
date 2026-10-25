@@ -1,0 +1,213 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "title": {
+      "text": "Gender patterns flip between Reading and Numeracy",
+      "subtitle": "Students achieving Strong or above nationally, 2026",
+      "anchor": "start",
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "subtitlePadding": 8
+    },
+
+    "data": {
+      "url": "data/naplan_equity.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "calendar_year": "number",
+          "year_level": "number",
+          "strong_or_above_pct": "number",
+          "average_score": "number"
+        }
+      }
+    },
+
+    "transform": [
+      {
+        "filter": "datum.calendar_year == 2026 && datum.state_territory == 'Australia' && datum.student_attribute == 'Gender' && (datum.subgroup == 'Male' || datum.subgroup == 'Female') && (datum.domain == 'Reading' || datum.domain == 'Numeracy')"
+      }
+    ],
+
+    "facet": {
+      "column": {
+        "field": "domain",
+        "type": "nominal",
+        "title": null,
+        "sort": ["Reading", "Numeracy"],
+        "header": {
+          "labelFontSize": 17,
+          "labelFontWeight": "bold",
+          "labelPadding": 10
+        }
+      }
+    },
+
+    "spec": {
+      "width": 300,
+      "height": 320,
+
+      "layer": [
+        {
+          "mark": {
+            "type": "line",
+            "strokeWidth": 3
+          },
+
+          "encoding": {
+            "x": {
+              "field": "subgroup",
+              "type": "ordinal",
+              "sort": ["Male", "Female"],
+              "title": null,
+              "axis": {
+                "labelAngle": 0,
+                "labelFontSize": 13
+              }
+            },
+
+            "y": {
+              "field": "strong_or_above_pct",
+              "type": "quantitative",
+              "title": "Strong or above (%)",
+              "scale": {
+                "domain": [50, 80]
+              }
+            },
+
+            "color": {
+              "field": "year_level",
+              "type": "ordinal",
+              "title": "Year level",
+              "scale": {
+                "scheme": "tableau10"
+              }
+            },
+
+            "detail": {
+              "field": "year_level"
+            }
+          }
+        },
+
+        {
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 110
+          },
+
+          "encoding": {
+            "x": {
+              "field": "subgroup",
+              "type": "ordinal",
+              "sort": ["Male", "Female"]
+            },
+
+            "y": {
+              "field": "strong_or_above_pct",
+              "type": "quantitative",
+              "scale": {
+                "domain": [50, 80]
+              }
+            },
+
+            "color": {
+              "field": "year_level",
+              "type": "ordinal",
+              "title": "Year level",
+              "scale": {
+                "scheme": "tableau10"
+              }
+            },
+
+            "tooltip": [
+              {
+                "field": "domain",
+                "type": "nominal",
+                "title": "Domain"
+              },
+              {
+                "field": "year_level",
+                "type": "ordinal",
+                "title": "Year level"
+              },
+              {
+                "field": "subgroup",
+                "type": "nominal",
+                "title": "Gender"
+              },
+              {
+                "field": "strong_or_above_pct",
+                "type": "quantitative",
+                "title": "Strong or above",
+                "format": ".1f"
+              },
+              {
+                "field": "average_score",
+                "type": "quantitative",
+                "title": "Average score",
+                "format": ".1f"
+              }
+            ]
+          }
+        },
+
+        {
+          "mark": {
+            "type": "text",
+            "dy": -12,
+            "fontSize": 11
+          },
+
+          "encoding": {
+            "x": {
+              "field": "subgroup",
+              "type": "ordinal",
+              "sort": ["Male", "Female"]
+            },
+
+            "y": {
+              "field": "strong_or_above_pct",
+              "type": "quantitative",
+              "scale": {
+                "domain": [50, 80]
+              }
+            },
+
+            "text": {
+              "field": "strong_or_above_pct",
+              "type": "quantitative",
+              "format": ".0f"
+            },
+
+            "color": {
+              "field": "year_level",
+              "type": "ordinal",
+              "scale": {
+                "scheme": "tableau10"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "resolve": {
+      "scale": {
+        "y": "shared",
+        "color": "shared"
+      }
+    },
+
+    "config": {
+      "view": {
+        "stroke": null
+      },
+
+      "legend": {
+        "orient": "bottom",
+        "direction": "horizontal"
+      }
+    }
+  }

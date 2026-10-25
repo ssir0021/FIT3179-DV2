@@ -1,0 +1,205 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 610,
+  "height": 190,
+
+  "title": {
+    "text": "Very remote students trail major-city peers in both Reading and Numeracy",
+    "subtitle": "Average Year 5 NAPLAN score, Australia, 2026 — orange: Very remote; blue: Major cities",
+    "anchor": "start",
+    "fontSize": 21,
+    "subtitleFontSize": 12,
+    "subtitlePadding": 7
+  },
+
+  "data": {
+    "url": "data/naplan_cohort_gain.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "calendar_year": "number",
+        "base_calendar_year": "number",
+        "year_level": "number",
+        "base_year_level": "number",
+        "value": "number"
+      }
+    }
+  },
+
+  "transform": [
+    {
+      "filter": "datum.calendar_year == 2026 && datum.base_calendar_year == 2024 && datum.year_level == 5 && datum.base_year_level == 3 && datum.state_territory == 'Australia' && datum.student_attribute == 'ABS remoteness' && datum.measure == 'Average NAPLAN score' && (datum.subgroup == 'Major cities' || datum.subgroup == 'Very remote') && (datum.domain == 'Reading' || datum.domain == 'Numeracy')"
+    },
+    {
+      "pivot": "subgroup",
+      "value": "value",
+      "groupby": ["domain"]
+    }
+  ],
+
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "stroke": "#c8c8c8",
+        "strokeWidth": 4
+      },
+      "encoding": {
+        "y": {
+          "field": "domain",
+          "type": "nominal",
+          "title": null,
+          "sort": ["Reading", "Numeracy"]
+        },
+        "x": {
+          "field": "Very remote",
+          "type": "quantitative",
+          "title": "Average NAPLAN score",
+          "scale": {"domain": [300, 520]}
+        },
+        "x2": {"field": "Major cities"}
+      }
+    },
+
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 125,
+        "color": "#e9893d",
+        "stroke": "white",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "domain",
+          "type": "nominal",
+          "sort": ["Reading", "Numeracy"]
+        },
+        "x": {
+          "field": "Very remote",
+          "type": "quantitative",
+          "scale": {"domain": [300, 520]}
+        },
+        "tooltip": [
+          {"field": "domain", "type": "nominal", "title": "Domain"},
+          {
+            "field": "Very remote",
+            "type": "quantitative",
+            "title": "Very remote score",
+            "format": ".1f"
+          },
+          {
+            "field": "Major cities",
+            "type": "quantitative",
+            "title": "Major cities score",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 125,
+        "color": "#4f8fc2",
+        "stroke": "white",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "domain",
+          "type": "nominal",
+          "sort": ["Reading", "Numeracy"]
+        },
+        "x": {
+          "field": "Major cities",
+          "type": "quantitative",
+          "scale": {"domain": [300, 520]}
+        },
+        "tooltip": [
+          {"field": "domain", "type": "nominal", "title": "Domain"},
+          {
+            "field": "Major cities",
+            "type": "quantitative",
+            "title": "Major cities score",
+            "format": ".1f"
+          },
+          {
+            "field": "Very remote",
+            "type": "quantitative",
+            "title": "Very remote score",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+
+    {
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -8,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#d9772e"
+      },
+      "encoding": {
+        "y": {
+          "field": "domain",
+          "type": "nominal",
+          "sort": ["Reading", "Numeracy"]
+        },
+        "x": {
+          "field": "Very remote",
+          "type": "quantitative",
+          "scale": {"domain": [300, 520]}
+        },
+        "text": {
+          "field": "Very remote",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 8,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#377bb2"
+      },
+      "encoding": {
+        "y": {
+          "field": "domain",
+          "type": "nominal",
+          "sort": ["Reading", "Numeracy"]
+        },
+        "x": {
+          "field": "Major cities",
+          "type": "quantitative",
+          "scale": {"domain": [300, 520]}
+        },
+        "text": {
+          "field": "Major cities",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    }
+  ],
+
+  "config": {
+    "view": {"stroke": null},
+    "axis": {
+      "labelFontSize": 12,
+      "titleFontSize": 13,
+      "gridColor": "#e1e5e8"
+    }
+  }
+}

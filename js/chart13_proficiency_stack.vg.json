@@ -1,0 +1,196 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "title": {
+      "text": "NAPLAN proficiency profiles change across year levels",
+      "subtitle": "National Reading and Numeracy proficiency distribution, 2026",
+      "anchor": "start",
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "subtitlePadding": 8
+    },
+
+    "data": {
+      "url": "data/naplan_national.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "calendar_year": "number",
+          "year_level": "number",
+          "exempt_pct": "number",
+          "needs_additional_support_pct": "number",
+          "developing_pct": "number",
+          "strong_pct": "number",
+          "exceeding_pct": "number"
+        }
+      }
+    },
+
+    "transform": [
+      {
+        "filter": "datum.calendar_year == 2026 && (datum.domain == 'Reading' || datum.domain == 'Numeracy')"
+      },
+
+      {
+        "fold": [
+          "exempt_pct",
+          "needs_additional_support_pct",
+          "developing_pct",
+          "strong_pct",
+          "exceeding_pct"
+        ],
+        "as": [
+          "band",
+          "percentage"
+        ]
+      },
+
+      {
+        "calculate": "datum.band == 'exempt_pct' ? 'Exempt' : datum.band == 'needs_additional_support_pct' ? 'Needs additional support' : datum.band == 'developing_pct' ? 'Developing' : datum.band == 'strong_pct' ? 'Strong' : 'Exceeding'",
+        "as": "proficiency"
+      },
+
+      {
+        "calculate": "datum.proficiency == 'Exempt' ? 1 : datum.proficiency == 'Needs additional support' ? 2 : datum.proficiency == 'Developing' ? 3 : datum.proficiency == 'Strong' ? 4 : 5",
+        "as": "proficiency_order"
+      }
+    ],
+
+    "facet": {
+      "column": {
+        "field": "domain",
+        "type": "nominal",
+        "title": null,
+        "sort": [
+          "Reading",
+          "Numeracy"
+        ],
+        "header": {
+          "labelFontSize": 17,
+          "labelFontWeight": "bold",
+          "labelPadding": 10
+        }
+      }
+    },
+
+    "spec": {
+      "width": 300,
+      "height": 330,
+
+      "mark": {
+        "type": "bar"
+      },
+
+      "encoding": {
+        "x": {
+          "field": "year_level",
+          "type": "ordinal",
+          "title": "Year level",
+          "sort": [
+            3,
+            5,
+            7,
+            9
+          ],
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+
+        "y": {
+          "field": "percentage",
+          "type": "quantitative",
+          "title": "Students (%)",
+          "stack": "zero",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+
+        "color": {
+          "field": "proficiency",
+          "type": "nominal",
+          "title": "Proficiency",
+          "sort": [
+            "Exempt",
+            "Needs additional support",
+            "Developing",
+            "Strong",
+            "Exceeding"
+          ],
+          "scale": {
+            "domain": [
+              "Exempt",
+              "Needs additional support",
+              "Developing",
+              "Strong",
+              "Exceeding"
+            ],
+            "range": [
+              "#d9d9d9",
+              "#d95f5f",
+              "#f0ad4e",
+              "#6baed6",
+              "#2171b5"
+            ]
+          }
+        },
+
+        "order": {
+          "field": "proficiency_order",
+          "type": "quantitative",
+          "sort": "ascending"
+        },
+
+        "tooltip": [
+          {
+            "field": "domain",
+            "type": "nominal",
+            "title": "Domain"
+          },
+          {
+            "field": "year_level",
+            "type": "ordinal",
+            "title": "Year level"
+          },
+          {
+            "field": "proficiency",
+            "type": "nominal",
+            "title": "Category"
+          },
+          {
+            "field": "percentage",
+            "type": "quantitative",
+            "title": "Students (%)",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+
+    "resolve": {
+      "scale": {
+        "color": "shared"
+      }
+    },
+
+    "config": {
+      "view": {
+        "stroke": null
+      },
+
+      "legend": {
+        "orient": "bottom",
+        "direction": "horizontal",
+        "columns": 3
+      },
+
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 13
+      }
+    }
+  }

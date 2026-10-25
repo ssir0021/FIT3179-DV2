@@ -1,0 +1,112 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Average Year 3 Reading NAPLAN score by Australian state and territory in 2025.",
+
+    "width": 650,
+    "height": 500,
+
+    "title": {
+      "text": "Victoria leads Year 3 reading, while the NT trails",
+      "subtitle": "Average NAPLAN reading score by state and territory, 2025",
+      "anchor": "start",
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "subtitlePadding": 8
+    },
+
+    "data": {
+      "url": "data/naplan_states.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "calendar_year": "number",
+          "year_level": "number",
+          "average_score": "number",
+          "strong_or_above_pct": "number",
+          "participation_pct": "number"
+        }
+      }
+    },
+
+    "transform": [
+      {
+        "filter": "datum.calendar_year == 2025 && datum.year_level == 3 && datum.domain == 'Reading'"
+      },
+      {
+        "lookup": "state_territory",
+        "from": {
+          "data": {
+            "url": "data/australia_states_simplified.geojson",
+            "format": {
+              "type": "json",
+              "property": "features"
+            }
+          },
+          "key": "properties.state_name"
+        },
+        "as": "geo"
+      }
+    ],
+
+    "projection": {
+      "type": "equalEarth"
+    },
+
+    "mark": {
+      "type": "geoshape",
+      "stroke": "white",
+      "strokeWidth": 1
+    },
+
+    "encoding": {
+      "shape": {
+        "field": "geo",
+        "type": "geojson"
+      },
+
+      "color": {
+        "field": "average_score",
+        "type": "quantitative",
+        "title": "Average NAPLAN score",
+        "scale": {
+          "scheme": "blues"
+        }
+      },
+
+      "tooltip": [
+        {
+          "field": "state_territory",
+          "type": "nominal",
+          "title": "State / Territory"
+        },
+        {
+          "field": "average_score",
+          "type": "quantitative",
+          "title": "Average score",
+          "format": ".1f"
+        },
+        {
+          "field": "strong_or_above_pct",
+          "type": "quantitative",
+          "title": "Strong or above",
+          "format": ".1f"
+        },
+        {
+          "field": "participation_pct",
+          "type": "quantitative",
+          "title": "Participation",
+          "format": ".1f"
+        }
+      ]
+    },
+
+    "config": {
+      "view": {
+        "stroke": null
+      },
+      "legend": {
+        "orient": "bottom",
+        "direction": "horizontal"
+      }
+    }
+  }

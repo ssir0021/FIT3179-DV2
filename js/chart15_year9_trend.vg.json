@@ -1,0 +1,171 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "width": 650,
+    "height": 330,
+
+    "title": {
+      "text": "Year 9 Numeracy ends 2026 ahead of Reading",
+      "subtitle": "Students achieving Strong or above nationally, 2023–2026",
+      "anchor": "start",
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "subtitlePadding": 8
+    },
+
+    "data": {
+      "url": "data/naplan_national.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "calendar_year": "number",
+          "year_level": "number",
+          "strong_or_above_pct": "number",
+          "average_score": "number"
+        }
+      }
+    },
+
+    "transform": [
+      {
+        "filter": "datum.year_level == 9 && (datum.domain == 'Reading' || datum.domain == 'Numeracy')"
+      }
+    ],
+
+    "layer": [
+      {
+        "mark": {
+          "type": "line",
+          "strokeWidth": 4,
+          "point": {
+            "filled": true,
+            "size": 100
+          }
+        },
+
+        "encoding": {
+          "x": {
+            "field": "calendar_year",
+            "type": "ordinal",
+            "title": "NAPLAN year",
+            "sort": [2023, 2024, 2025, 2026],
+            "axis": {
+              "labelAngle": 0
+            }
+          },
+
+          "y": {
+            "field": "strong_or_above_pct",
+            "type": "quantitative",
+            "title": "Strong or above (%)",
+            "scale": {
+              "domain": [55, 70]
+            }
+          },
+
+          "color": {
+            "field": "domain",
+            "type": "nominal",
+            "title": "Domain",
+            "sort": [
+              "Reading",
+              "Numeracy"
+            ],
+            "scale": {
+              "range": [
+                "#2166ac",
+                "#e67e22"
+              ]
+            }
+          },
+
+          "detail": {
+            "field": "domain"
+          },
+
+          "tooltip": [
+            {
+              "field": "domain",
+              "type": "nominal",
+              "title": "Domain"
+            },
+            {
+              "field": "calendar_year",
+              "type": "ordinal",
+              "title": "Year"
+            },
+            {
+              "field": "strong_or_above_pct",
+              "type": "quantitative",
+              "title": "Strong or above (%)",
+              "format": ".1f"
+            },
+            {
+              "field": "average_score",
+              "type": "quantitative",
+              "title": "Average score",
+              "format": ".1f"
+            }
+          ]
+        }
+      },
+
+      {
+        "mark": {
+          "type": "text",
+          "dy": -13,
+          "fontSize": 12,
+          "fontWeight": "bold"
+        },
+
+        "encoding": {
+          "x": {
+            "field": "calendar_year",
+            "type": "ordinal",
+            "sort": [2023, 2024, 2025, 2026]
+          },
+
+          "y": {
+            "field": "strong_or_above_pct",
+            "type": "quantitative",
+            "scale": {
+              "domain": [55, 70]
+            }
+          },
+
+          "text": {
+            "field": "strong_or_above_pct",
+            "type": "quantitative",
+            "format": ".1f"
+          },
+
+          "color": {
+            "field": "domain",
+            "type": "nominal",
+            "scale": {
+              "range": [
+                "#2166ac",
+                "#e67e22"
+              ]
+            }
+          }
+        }
+      }
+    ],
+
+    "config": {
+      "view": {
+        "stroke": null
+      },
+
+      "legend": {
+        "orient": "bottom",
+        "direction": "horizontal"
+      },
+
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 13
+      }
+    }
+  }

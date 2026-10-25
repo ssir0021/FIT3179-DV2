@@ -1,0 +1,193 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 650,
+  "height": 340,
+
+  "title": {
+    "text": "Reading achievement varies across jurisdictions at every year level",
+    "subtitle": "Distribution of Strong-or-above rates across Australian states and territories, 2025",
+    "anchor": "start",
+    "fontSize": 22,
+    "subtitleFontSize": 13,
+    "subtitlePadding": 8
+  },
+
+  "data": {
+    "url": "data/naplan_states.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "calendar_year": "number",
+        "year_level": "number",
+        "strong_or_above_pct": "number",
+        "average_score": "number",
+        "participation_pct": "number"
+      }
+    }
+  },
+
+  "transform": [
+    {
+      "filter": "datum.calendar_year == 2025 && datum.domain == 'Reading' && datum.student_attribute == 'All' && datum.subgroup == 'All'"
+    }
+  ],
+
+  "layer": [
+    {
+      "transform": [{
+        "aggregate": [
+          {"op": "min", "field": "strong_or_above_pct", "as": "min_value"},
+          {"op": "max", "field": "strong_or_above_pct", "as": "max_value"}
+        ],
+        "groupby": ["year_level"]
+      }],
+      "mark": {"type": "rule", "strokeWidth": 2, "color": "#777777"},
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "sort": [3, 5, 7, 9]
+        },
+        "y": {
+          "field": "min_value", "type": "quantitative",
+          "scale": {"domain": [30, 85]}
+        },
+        "y2": {"field": "max_value"}
+      }
+    },
+
+    {
+      "transform": [{
+        "aggregate": [
+          {"op": "q1", "field": "strong_or_above_pct", "as": "q1_value"},
+          {"op": "q3", "field": "strong_or_above_pct", "as": "q3_value"}
+        ],
+        "groupby": ["year_level"]
+      }],
+      "mark": {
+        "type": "bar", "size": 60, "color": "#9ecae1",
+        "stroke": "#2166ac", "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "title": "Year level", "sort": [3, 5, 7, 9],
+          "axis": {"labelAngle": 0}
+        },
+        "y": {
+          "field": "q1_value", "type": "quantitative",
+          "title": "Strong or above (%)",
+          "scale": {"domain": [30, 85]}
+        },
+        "y2": {"field": "q3_value"}
+      }
+    },
+
+    {
+      "transform": [{
+        "aggregate": [
+          {"op": "median", "field": "strong_or_above_pct", "as": "median_value"}
+        ],
+        "groupby": ["year_level"]
+      }],
+      "mark": {
+        "type": "tick", "size": 60,
+        "thickness": 3, "color": "#1f1f1f"
+      },
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "sort": [3, 5, 7, 9]
+        },
+        "y": {
+          "field": "median_value", "type": "quantitative",
+          "scale": {"domain": [30, 85]}
+        }
+      }
+    },
+
+    {
+      "transform": [{
+        "aggregate": [
+          {"op": "min", "field": "strong_or_above_pct", "as": "min_value"}
+        ],
+        "groupby": ["year_level"]
+      }],
+      "mark": {
+        "type": "tick", "size": 60,
+        "thickness": 2, "color": "#777777"
+      },
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "sort": [3, 5, 7, 9]
+        },
+        "y": {
+          "field": "min_value", "type": "quantitative",
+          "scale": {"domain": [30, 85]}
+        }
+      }
+    },
+
+    {
+      "transform": [{
+        "aggregate": [
+          {"op": "max", "field": "strong_or_above_pct", "as": "max_value"}
+        ],
+        "groupby": ["year_level"]
+      }],
+      "mark": {
+        "type": "tick", "size": 60,
+        "thickness": 2, "color": "#777777"
+      },
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "sort": [3, 5, 7, 9]
+        },
+        "y": {
+          "field": "max_value", "type": "quantitative",
+          "scale": {"domain": [30, 85]}
+        }
+      }
+    },
+
+    {
+      "mark": {
+        "type": "point", "filled": true,
+        "size": 85, "opacity": 0.78,
+        "color": "#2166ac", "stroke": "white", "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "year_level", "type": "ordinal",
+          "sort": [3, 5, 7, 9]
+        },
+        "y": {
+          "field": "strong_or_above_pct", "type": "quantitative",
+          "scale": {"domain": [30, 85]}
+        },
+        "tooltip": [
+          {"field": "state_territory", "type": "nominal", "title": "State / Territory"},
+          {"field": "year_level", "type": "ordinal", "title": "Year level"},
+          {
+            "field": "strong_or_above_pct", "type": "quantitative",
+            "title": "Strong or above (%)", "format": ".1f"
+          },
+          {
+            "field": "average_score", "type": "quantitative",
+            "title": "Average score", "format": ".1f"
+          },
+          {
+            "field": "participation_pct", "type": "quantitative",
+            "title": "Participation (%)", "format": ".1f"
+          }
+        ]
+      }
+    }
+  ],
+
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}

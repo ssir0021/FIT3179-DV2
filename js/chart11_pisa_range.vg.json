@@ -1,0 +1,156 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 650,
+  "height": 330,
+
+  "title": {
+    "text": "Australia scores above the OECD average, but performance is widely spread",
+    "subtitle": "PISA 2022 mathematics — 10th to 90th percentile range with mean score",
+    "anchor": "start",
+    "fontSize": 22,
+    "subtitleFontSize": 13,
+    "subtitlePadding": 8
+  },
+
+  "data": {
+    "url": "data/pisa_math_range.csv",
+    "format": {
+      "type": "csv",
+      "parse": {"p10": "number", "mean": "number", "p90": "number"}
+    }
+  },
+
+  "transform": [
+    {"calculate": "datum.p90 - datum.p10", "as": "spread"}
+  ],
+
+  "encoding": {
+    "y": {
+      "field": "country",
+      "type": "nominal",
+      "title": null,
+      "sort": {"field": "mean", "order": "descending"},
+      "axis": {"labelFontSize": 12}
+    }
+  },
+
+  "layer": [
+    {
+      "mark": {"type": "rule", "strokeWidth": 7, "color": "#d3d3d3"},
+      "encoding": {
+        "x": {
+          "field": "p10",
+          "type": "quantitative",
+          "title": "PISA mathematics score",
+          "scale": {"domain": [330, 720]}
+        },
+        "x2": {"field": "p90"}
+      }
+    },
+
+    {
+      "mark": {
+        "type": "tick",
+        "thickness": 2,
+        "size": 18,
+        "color": "#777777"
+      },
+      "encoding": {
+        "x": {"field": "p10", "type": "quantitative"}
+      }
+    },
+
+    {
+      "mark": {
+        "type": "tick",
+        "thickness": 2,
+        "size": 18,
+        "color": "#777777"
+      },
+      "encoding": {
+        "x": {"field": "p90", "type": "quantitative"}
+      }
+    },
+
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 180,
+        "stroke": "white",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {"field": "mean", "type": "quantitative"},
+
+        "color": {
+          "condition": {
+            "test": "datum.country == 'Australia'",
+            "value": "#d95f02"
+          },
+          "value": "#2166ac"
+        },
+
+        "tooltip": [
+          {"field": "country", "type": "nominal", "title": "Country / group"},
+          {
+            "field": "mean",
+            "type": "quantitative",
+            "title": "Mean score",
+            "format": ".1f"
+          },
+          {
+            "field": "p10",
+            "type": "quantitative",
+            "title": "10th percentile",
+            "format": ".1f"
+          },
+          {
+            "field": "p90",
+            "type": "quantitative",
+            "title": "90th percentile",
+            "format": ".1f"
+          },
+          {
+            "field": "spread",
+            "type": "quantitative",
+            "title": "90th–10th gap",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 11,
+        "fontSize": 12,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "x": {"field": "mean", "type": "quantitative"},
+
+        "text": {
+          "field": "mean",
+          "type": "quantitative",
+          "format": ".0f"
+        },
+
+        "color": {
+          "condition": {
+            "test": "datum.country == 'Australia'",
+            "value": "#d95f02"
+          },
+          "value": "#2166ac"
+        }
+      }
+    }
+  ],
+
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"labelFontSize": 12, "titleFontSize": 13}
+  }
+}
